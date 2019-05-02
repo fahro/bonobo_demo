@@ -1,5 +1,11 @@
 import bonobo
 import csv
+import os
+
+
+# if resulting file exists remove it!
+if os.path.exists('result.csv'):
+    os.remove('result.csv')
 
 FILE_PATH = 'demo.csv'
 
@@ -18,8 +24,14 @@ def extract():
 
 def transform(row):
     """Placeholder, change, rename, remove... """
-    del row[2]
+    del row[2]  # deleting population
     yield row
+
+
+def another_transform(row):
+    """Convert to upper case city name"""
+    row[1] = row[1].upper()  # making capital city uppercase
+    return row
 
 
 def load(row):
@@ -37,7 +49,7 @@ def get_graph(**options):
 
     """
     graph = bonobo.Graph()
-    graph.add_chain(extract, transform, load)
+    graph.add_chain(extract, transform, another_transform, load)
 
     return graph
 
